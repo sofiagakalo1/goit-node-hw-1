@@ -33,6 +33,20 @@ const addContact = async (name, email, phone) => {
   return newContact;
 };
 
+const updateContact = async (contactId, data) => {
+  const allContacts = await listContacts();
+  const index = allContacts.findIndex((contact) => contact.id === contactId);
+
+  if (index === -1) {
+    return null;
+  }
+  //контакт з індексом, який знайшли
+  allContacts[index] = { contactId, ...data };
+
+  await fs.writeFile(contactsPath, JSON.stringify(allContacts, null, 2));
+  return allContacts[index];
+};
+
 const removeContact = async (contactId) => {
   const allContacts = await listContacts();
   const index = allContacts.findIndex((contact) => contact.id === contactId);
@@ -48,5 +62,6 @@ module.exports = {
   listContacts,
   getContactById,
   addContact,
+  updateContact,
   removeContact,
 };
